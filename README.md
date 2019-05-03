@@ -1,5 +1,6 @@
 # VSCode Cloud Code Setting Example 
 
+This sample python project is cloned from https://github.com/alicek106/nginx-ingress-annotation-text
 ## .vscode directory
 
 - settings.json
