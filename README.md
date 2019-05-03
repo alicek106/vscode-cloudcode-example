@@ -1,57 +1,62 @@
-# Hello World with Cloud Code
+# VSCode Cloud Code Setting Example 
 
-![Architecture Diagram](./img/diagram.png)
+## .vscode directory
 
-"Hello World" is a simple Kubernetes application that contains a single
-[Deployment](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/) and a corresponding
-[Service](https://kubernetes.io/docs/concepts/services-networking/service/). The Deployment contains a
-[Flask-based](http://flask.pocoo.org/) web server that simply prints "Hello World".
+- settings.json
 
-----
+  - **cloudcode.profile-cluster-map** : Settings of cloud code profiles. Custom Profiles can be edited in VSCode, but [default] profiles can be changed only in settings.json
 
-## Table of Contents
+  - Example : [default] profile is set to **'docker-for-mac'**
 
-### Cloud Code for Visual Studio Code
+    ```
+    {
+        "cloudcode.profile-cluster-map": {
+            "[default]": "docker-for-desktop",
+            "cloudbuild": "test-kube",
+            "test-kube": "test-kube"
+        }
+    }
+    ```
 
-1. [Getting Started](#getting-started])
-2. [What's in the box](https://cloud.google.com/code/docs/vscode/quickstart#whats_in_the_box)
-3. Using Cloud Code
-    * [Set up a Google Kubernetes Engine Cluster](https://cloud.google.com/code/docs/vscode/quickstart#creating_a_google_kubernetes_engine_cluster)
-    * [Deploy the app](https://cloud.google.com/code/docs/vscode/quickstart#deploying_your_app)
-    * [Continuous Deployment](https://cloud.google.com/code/docs/vscode/quickstart#initiating_continuous_deployment)
-    * [View Container Logs](https://cloud.google.com/code/docs/vscode/quickstart#viewing_container_logs)
-    * [Debug Your Code](https://cloud.google.com/code/docs/vscode/quickstart#debugging_your_application)
-    * [Open a Terminal in Your Container](https://cloud.google.com/code/docs/vscode/quickstart#opening_a_terminal_in_your_container)
-4. [Using the Command Line](#using-the-command-line)
-    * [Skaffold](#using-skaffold)
-    * [kubectl](#using-kubectl)
+  - **cloudcode.image-registry** : Registry name to use. skaffold automatically picks up this value to tag and push built image. But to let kubernetes cluster pull the image, **imagePullSecret (docker config type Secret) should be provided to Deployment.** 
 
-----
+  - Example : Below setting will trigger to build image with registry name, and push to registry.
 
-### Getting Started
+    ```
+    {
+        "cloudcode.image-registry": {
+            "name": "alicek106.ipdisk.co.kr"
+        }
+    }
+    ```
 
-This sample was written to demonstrate how to use the Cloud Code extension for Visual Studio code.
+    
 
-* [Install Cloud Code for VS Code](https://cloud.google.com/code/docs/vscode/install)
-* [Creating a new app](https://cloud.google.com/code/docs/vscode/creating-an-application)
-* [Editing YAML files](https://cloud.google.com/code/docs/vscode/yaml-editing)
+- tasks.json
 
-----
+  - Settings for appropriate debugging and python interpreter. Below example uses src/app.py to launch application.
 
-### Using the Command Line
+  - Example:
 
-As an alternative to using the Cloud Code extension, the application can be deployed to a cluster using standard command line tools
+    ```
+    {
+        "version": "2.0.0",
+        "tasks": [
+            {
+                "label": "Pylint",
+                "type": "shell",
+                "command": "python3",
+                "args": ["-m", "pylint", "src/app.py"],
+                "problemMatcher": []
+            }
+        ]
+    }
+    ```
 
-#### Skaffold
+    
 
-[Skaffold](https://github.com/GoogleContainerTools/skaffold) is a command line tool that can be used to build, push, and deploy your container images
+## skaffold.yaml
 
-```bash
-skaffold run --default-repo=gcr.io/your-project-id-here/cloudcode
-```
+- Attribute **profiles.build.local.push** can be true to push built image.
 
-#### kubectl
-
-[kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl/) is the official Kubernetes command line tool. It can be used to deploy Kubernetes manifests to your cluster, but images must be build seperately using another tool (for example, using the [Docker CLI](https://docs.docker.com/engine/reference/commandline/cli/))
-
------|------
+- Attribute **profiles.build.name** should be kubernetes profile name that you want to deploy.
