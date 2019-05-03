@@ -1,0 +1,10 @@
+{
+    "cloudcode.profile-cluster-map": {
+        "[default]": "docker-for-desktop",
+        "cloudbuild": "test-kube",
+        "test-kube": "test-kube"
+    },
+    "cloudcode.image-registry": {
+        "name": "alicek106.ipdisk.co.kr"
+    }
+}

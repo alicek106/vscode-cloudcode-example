@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: http-header-printer
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: http-header-printer
+  template:
+    metadata:
+      labels:
+        app: http-header-printer
+    spec:
+      imagePullSecrets:
+      - name: alicek106-registry-secret
+      containers:
+      - name: http-header-printer
+        image: alicek106.ipdisk.co.kr/print-http-header
+        ports:
+        - name: flask
+          containerPort: 5000
+        env:
+        - name: PORT
+

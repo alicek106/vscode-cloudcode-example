@@ -1,0 +1,24 @@
+apiVersion: skaffold/v1beta6
+kind: Config
+build:
+  tagPolicy:
+    envTemplate:
+      template: "{{.IMAGE_NAME}}:v2"
+  artifacts:
+    - context: src
+      image: print-http-header
+deploy:
+  kubectl:
+    manifests:
+      - kubernetes-manifests/**
+profiles:
+  - name: cloudbuild
+    build:
+      googleCloudBuild: {}
+  - build:
+      local:
+        push: true
+        useBuildkit: false
+        useDockerCLI: false
+    deploy: {}
+    name: docker-for-desktop
